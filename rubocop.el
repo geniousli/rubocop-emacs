@@ -155,11 +155,11 @@ When NO-ERROR is non-nil returns nil instead of raise an error."
 The command will be prefixed with `bundle exec` if RuboCop is bundled."
   (concat
    (if rubocop-run-in-chroot (format "schroot -d %s -- " (rubocop-project-root)))
+   (if (and (not rubocop-prefer-system-executable) (rubocop-bundled-p)) "bundle exec " "")
    "rubocop"
    " "
-   ;; (if (and (not rubocop-prefer-system-executable) (rubocop-bundled-p)) "bundle exec " "")
    (if (and (or force-exclusion rubocop-force-exclusion)  rubocop-file-path)
-       (format "--force-exclusion %s " rubocop-file-path))
+       (format "--force-exclusion -c %s " rubocop-file-path))
    command
    (rubocop-build-requires)
    " "
